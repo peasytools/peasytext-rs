@@ -1,0 +1,18 @@
+[package]
+name = "peasytext"
+version = "0.1.1"
+edition = "2021"
+authors = ["PeasyTools"]
+description = "Text processing library for Rust — case conversion (camelCase, snake_case, kebab-case, PascalCase), word/character counting, slug generation, Base64/URL encoding. Zero external dependencies."
+license = "MIT"
+repository = "https://github.com/peasytools/peasytext-rs"
+homepage = "https://peasytext.com"
+documentation = "https://docs.rs/peasytext"
+readme = "README.md"
+keywords = ["text", "case-conversion", "slug", "word-count", "encoding"]
+categories = ["text-processing", "command-line-utilities"]
+
+exclude = ["target/", "demo.gif", "demo.tape"]
+
+[dependencies]
+thiserror = "2"
