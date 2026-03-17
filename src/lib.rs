@@ -1,8 +1,7 @@
-//! peasytext — Text processing library for Rust.
-//!
-//! Case conversion, word counting, slug generation, and encoding utilities.
-//! Zero external dependencies.
+pub mod client;
+pub mod error;
+pub mod types;
 
-mod engine;
-
-pub use engine::*;
+pub use client::Client;
+pub use error::{PeasyError, Result};
+pub use types::*;

@@ -1,18 +1,24 @@
 [package]
 name = "peasytext"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 authors = ["PeasyTools"]
-description = "Text processing library for Rust — case conversion (camelCase, snake_case, kebab-case, PascalCase), word/character counting, slug generation, Base64/URL encoding. Zero external dependencies."
+description = "Rust client for PeasyText — text tools, glossary, and guides API"
 license = "MIT"
 repository = "https://github.com/peasytools/peasytext-rs"
 homepage = "https://peasytext.com"
 documentation = "https://docs.rs/peasytext"
 readme = "README.md"
-keywords = ["text", "case-conversion", "slug", "word-count", "encoding"]
-categories = ["text-processing", "command-line-utilities"]
-
+keywords = ["text", "peasy", "api-client", "tools"]
+categories = ["api-bindings"]
 exclude = ["target/", "demo.gif", "demo.tape"]
 
 [dependencies]
+reqwest = { version = "0.12", features = ["json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 thiserror = "2"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
+wiremock = "0.6"
