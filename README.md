@@ -3,6 +3,8 @@
 [![crates.io](https://img.shields.io/crates/v/peasytext)](https://crates.io/crates/peasytext)
 [![docs.rs](https://docs.rs/peasytext/badge.svg)](https://docs.rs/peasytext)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![crates.io](https://agentgif.com/badge/crates/peasytext/version.svg)](https://crates.io/crates/peasytext)
+[![GitHub stars](https://agentgif.com/badge/github/peasytools/peasytext-rs/stars.svg)](https://github.com/peasytools/peasytext-rs)
 
 Async Rust client for the [PeasyText](https://peasytext.com) API -- text case conversion, slug generation, word counting, and encoding utilities with tools for camelCase, snake_case, kebab-case, PascalCase, and more. Built with reqwest, serde, and tokio.
 
