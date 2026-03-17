@@ -4,15 +4,18 @@
 [![docs.rs](https://docs.rs/peasytext/badge.svg)](https://docs.rs/peasytext)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Text processing library for Rust — case conversion (camelCase, snake_case, kebab-case, PascalCase), word/character counting, slug generation, Base64/URL encoding. Zero external dependencies.
+Async Rust client for the [PeasyText](https://peasytext.com) API — text case conversion, slug generation, word counting, and Base64/URL encoding. Built with reqwest, serde, and tokio.
 
-Built from [Peasytext](https://peasytext.com), a free online toolkit.
+Built from [PeasyText](https://peasytext.com), a free online text toolkit with tools for case conversion (camelCase, snake_case, kebab-case, PascalCase), slug generation, word counting, and encoding.
+
+> **Try the interactive tools at [peasytext.com](https://peasytext.com)** — [Text Tools](https://peasytext.com/), [Text Glossary](https://peasytext.com/glossary/), [Text Guides](https://peasytext.com/guides/)
 
 ## Install
 
 ```toml
 [dependencies]
-peasytext = "0.1.1"
+peasytext = "0.2.0"
+tokio = { version = "1", features = ["full"] }
 ```
 
 Or via cargo:
@@ -24,36 +27,133 @@ cargo add peasytext
 ## Quick Start
 
 ```rust
-use peasytext::*;
+use peasytext::Client;
 
-fn main() {
-    println!("peasytext v0.1.1");
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = Client::new();
+
+    // List available text tools
+    let tools = client.list_tools(&Default::default()).await?;
+    for tool in &tools.results {
+        println!("{}: {}", tool.name, tool.description);
+    }
+
+    Ok(())
 }
 ```
 
+## API Client
+
+The client wraps the [PeasyText REST API](https://peasytext.com/developers/) with strongly-typed Rust structs using serde deserialization.
+
+```rust
+use peasytext::Client;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = Client::new();
+    // Or with a custom base URL:
+    // let client = Client::with_base_url("https://custom.example.com");
+
+    // List tools with filters
+    let opts = peasytext::ListOptions {
+        page: Some(1),
+        limit: Some(10),
+        search: Some("case".into()),
+        ..Default::default()
+    };
+    let tools = client.list_tools(&opts).await?;
+
+    // Get a specific tool
+    let tool = client.get_tool("text-case").await?;
+    println!("{}: {}", tool.name, tool.description);
+
+    // Search across all content
+    let results = client.search("case", Some(20)).await?;
+    println!("Found {} tools", results.results.tools.len());
+
+    // Browse the glossary
+    let glossary = client.list_glossary(&peasytext::ListOptions {
+        search: Some("slugify".into()),
+        ..Default::default()
+    }).await?;
+    for term in &glossary.results {
+        println!("{}: {}", term.term, term.definition);
+    }
+
+    // Discover guides
+    let guides = client.list_guides(&peasytext::ListGuidesOptions {
+        category: Some("text".into()),
+        ..Default::default()
+    }).await?;
+    for guide in &guides.results {
+        println!("{} ({})", guide.title, guide.audience_level);
+    }
+
+    // List format conversions
+    let conversions = client.list_conversions(&peasytext::ListConversionsOptions {
+        source: Some("txt".into()),
+        ..Default::default()
+    }).await?;
+
+    Ok(())
+}
+```
+
+### Available Methods
+
+| Method | Description |
+|--------|-------------|
+| `list_tools(&opts)` | List tools (paginated, filterable) |
+| `get_tool(slug)` | Get tool by slug |
+| `list_categories(&opts)` | List tool categories |
+| `list_formats(&opts)` | List file formats |
+| `get_format(slug)` | Get format by slug |
+| `list_conversions(&opts)` | List format conversions |
+| `list_glossary(&opts)` | List glossary terms |
+| `get_glossary_term(slug)` | Get glossary term |
+| `list_guides(&opts)` | List guides |
+| `get_guide(slug)` | Get guide by slug |
+| `list_use_cases(&opts)` | List use cases |
+| `search(query, limit)` | Search across all content |
+| `list_sites()` | List Peasy sites |
+| `openapi_spec()` | Get OpenAPI specification |
+
+Full API documentation at [peasytext.com/developers/](https://peasytext.com/developers/).
+OpenAPI 3.1.0 spec: [peasytext.com/api/openapi.json](https://peasytext.com/api/openapi.json).
+
+## Learn More
+
+- **Tools**: [Text Case Converter](https://peasytext.com/tools/text-case/) · [Slug Generator](https://peasytext.com/tools/slugify/) · [All Tools](https://peasytext.com/)
+- **Guides**: [How to Convert Text Case](https://peasytext.com/guides/convert-case/) · [All Guides](https://peasytext.com/guides/)
+- **Glossary**: [What is Slugify?](https://peasytext.com/glossary/slugify/) · [All Terms](https://peasytext.com/glossary/)
+- **Formats**: [TXT](https://peasytext.com/formats/txt/) · [All Formats](https://peasytext.com/formats/)
+- **API**: [REST API Docs](https://peasytext.com/developers/) · [OpenAPI Spec](https://peasytext.com/api/openapi.json)
+
 ## Also Available
 
-| Platform | Package | Install |
+| Language | Package | Install |
 |----------|---------|---------|
-| **PyPI** | [peasytext](https://pypi.org/project/peasytext/) | `pip install peasytext` |
-| **npm** | [peasytext](https://www.npmjs.com/package/peasytext) | `npm install peasytext` |
-| **RubyGems** | [peasytext](https://rubygems.org/gems/peasytext) | `gem install peasytext` |
-| **Homebrew** | [peasytools/peasy](https://github.com/peasytools/homebrew-peasy) | `brew install peasytools/peasy/peasytext` |
+| **Python** | [peasytext](https://pypi.org/project/peasytext/) | `pip install "peasytext[all]"` |
+| **TypeScript** | [peasytext](https://www.npmjs.com/package/peasytext) | `npm install peasytext` |
+| **Go** | [peasytext-go](https://pkg.go.dev/github.com/peasytools/peasytext-go) | `go get github.com/peasytools/peasytext-go` |
+| **Ruby** | [peasytext](https://rubygems.org/gems/peasytext) | `gem install peasytext` |
 
 ## Peasy Developer Tools
 
-| Package | PyPI | npm | RubyGems | crates.io | Description |
-|---------|------|-----|----------|-----------|-------------|
-| peasy-pdf | [PyPI](https://pypi.org/project/peasy-pdf/) | [npm](https://www.npmjs.com/package/peasy-pdf) | [Gem](https://rubygems.org/gems/peasy-pdf) | [Crate](https://crates.io/crates/peasy-pdf) | PDF merge, split, compress, rotate, watermark |
-| peasy-image | [PyPI](https://pypi.org/project/peasy-image/) | [npm](https://www.npmjs.com/package/peasy-image) | [Gem](https://rubygems.org/gems/peasy-image) | [Crate](https://crates.io/crates/peasy-image) | Image resize, crop, compress, convert, watermark |
-| peasytext | [PyPI](https://pypi.org/project/peasytext/) | [npm](https://www.npmjs.com/package/peasytext) | [Gem](https://rubygems.org/gems/peasytext) | [Crate](https://crates.io/crates/peasytext) | Text analysis, case conversion, slugs, word count |
-| peasy-css | [PyPI](https://pypi.org/project/peasy-css/) | [npm](https://www.npmjs.com/package/peasy-css) | [Gem](https://rubygems.org/gems/peasy-css) | [Crate](https://crates.io/crates/peasy-css) | CSS gradients, shadows, flexbox, grid generators |
-| peasy-compress | [PyPI](https://pypi.org/project/peasy-compress/) | [npm](https://www.npmjs.com/package/peasy-compress) | [Gem](https://rubygems.org/gems/peasy-compress) | [Crate](https://crates.io/crates/peasy-compress) | Gzip, deflate, brotli compression |
-| peasy-document | [PyPI](https://pypi.org/project/peasy-document/) | [npm](https://www.npmjs.com/package/peasy-document) | [Gem](https://rubygems.org/gems/peasy-document) | [Crate](https://crates.io/crates/peasy-document) | Markdown, HTML, CSV, JSON, YAML conversion |
-| peasy-audio | [PyPI](https://pypi.org/project/peasy-audio/) | [npm](https://www.npmjs.com/package/peasy-audio) | [Gem](https://rubygems.org/gems/peasy-audio) | [Crate](https://crates.io/crates/peasy-audio) | Audio convert, trim, merge, normalize, effects |
-| peasy-video | [PyPI](https://pypi.org/project/peasy-video/) | [npm](https://www.npmjs.com/package/peasy-video) | [Gem](https://rubygems.org/gems/peasy-video) | [Crate](https://crates.io/crates/peasy-video) | Video trim, resize, thumbnails, GIF conversion |
+Part of the [Peasy Tools](https://peasytools.com) open-source developer ecosystem.
 
-Part of the [Peasy](https://peasytools.com) developer tools ecosystem.
+| Package | PyPI | npm | crates.io | Description |
+|---------|------|-----|-----------|-------------|
+| peasy-pdf | [PyPI](https://pypi.org/project/peasy-pdf/) | [npm](https://www.npmjs.com/package/peasy-pdf) | [crate](https://crates.io/crates/peasy-pdf) | PDF merge, split, rotate, compress — [peasypdf.com](https://peasypdf.com) |
+| peasy-image | [PyPI](https://pypi.org/project/peasy-image/) | [npm](https://www.npmjs.com/package/peasy-image) | [crate](https://crates.io/crates/peasy-image) | Image resize, crop, convert, compress — [peasyimage.com](https://peasyimage.com) |
+| peasy-audio | [PyPI](https://pypi.org/project/peasy-audio/) | [npm](https://www.npmjs.com/package/peasy-audio) | [crate](https://crates.io/crates/peasy-audio) | Audio trim, merge, convert, normalize — [peasyaudio.com](https://peasyaudio.com) |
+| peasy-video | [PyPI](https://pypi.org/project/peasy-video/) | [npm](https://www.npmjs.com/package/peasy-video) | [crate](https://crates.io/crates/peasy-video) | Video trim, resize, thumbnails, GIF — [peasyvideo.com](https://peasyvideo.com) |
+| peasy-css | [PyPI](https://pypi.org/project/peasy-css/) | [npm](https://www.npmjs.com/package/peasy-css) | [crate](https://crates.io/crates/peasy-css) | CSS minify, format, analyze — [peasycss.com](https://peasycss.com) |
+| peasy-compress | [PyPI](https://pypi.org/project/peasy-compress/) | [npm](https://www.npmjs.com/package/peasy-compress) | [crate](https://crates.io/crates/peasy-compress) | ZIP, TAR, gzip compression — [peasytools.com](https://peasytools.com) |
+| peasy-document | [PyPI](https://pypi.org/project/peasy-document/) | [npm](https://www.npmjs.com/package/peasy-document) | [crate](https://crates.io/crates/peasy-document) | Markdown, HTML, CSV, JSON conversion — [peasyformats.com](https://peasyformats.com) |
+| **peasytext** | [PyPI](https://pypi.org/project/peasytext/) | [npm](https://www.npmjs.com/package/peasytext) | [crate](https://crates.io/crates/peasytext) | Text case conversion, slugify, word count — [peasytext.com](https://peasytext.com) |
 
 ## License
 
