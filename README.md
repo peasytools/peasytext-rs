@@ -125,10 +125,10 @@ OpenAPI 3.1.0 spec: [peasytext.com/api/openapi.json](https://peasytext.com/api/o
 
 ## Learn More
 
-- **Tools**: [Text Case Converter](https://peasytext.com/tools/text-case/) · [Slug Generator](https://peasytext.com/tools/slugify/) · [All Tools](https://peasytext.com/)
-- **Guides**: [How to Convert Text Case](https://peasytext.com/guides/convert-case/) · [All Guides](https://peasytext.com/guides/)
-- **Glossary**: [What is Slugify?](https://peasytext.com/glossary/slugify/) · [All Terms](https://peasytext.com/glossary/)
-- **Formats**: [TXT](https://peasytext.com/formats/txt/) · [All Formats](https://peasytext.com/formats/)
+- **Tools**: [Text Counter](https://peasytext.com/text/text-counter/) · [Case Converter](https://peasytext.com/text/text-case-converter/) · [Slug Generator](https://peasytext.com/text/slug-generator/) · [All Tools](https://peasytext.com/)
+- **Guides**: [Text Encoding Guide](https://peasytext.com/guides/text-encoding-utf8-ascii/) · [Regex Cheat Sheet](https://peasytext.com/guides/regex-cheat-sheet-essential-patterns/) · [All Guides](https://peasytext.com/guides/)
+- **Glossary**: [ASCII](https://peasytext.com/glossary/ascii/) · [UTF-8](https://peasytext.com/glossary/) · [BOM](https://peasytext.com/glossary/bom/) · [All Terms](https://peasytext.com/glossary/)
+- **Formats**: [TXT](https://peasytext.com/formats/txt/) · [CSV](https://peasytext.com/formats/csv/) · [All Formats](https://peasytext.com/formats/)
 - **API**: [REST API Docs](https://peasytext.com/developers/) · [OpenAPI Spec](https://peasytext.com/api/openapi.json)
 
 ## Also Available
