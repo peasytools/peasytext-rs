@@ -1,6 +1,6 @@
 [package]
 name = "peasytext"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 authors = ["PeasyTools"]
 description = "Rust client for PeasyText — text tools, glossary, and guides API"
